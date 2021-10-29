@@ -6,7 +6,7 @@ CREATE TABLE tracker.data (
     experiment_id INT NOT NULL AUTO_INCREMENT, -- shared across tables (e.g. analysis)
     experiment_class VARCHAR(100) NOT NULL,
     experiment_rig VARCHAR(100) NOT NULL,
-    fish_id VARCHAR(100) NOT NULL,             -- id not sure this is the best (since it "hides" genotype info etc.), but let's try it
+    fish_id INT NOT NULL,             -- id not sure this is the best (since it "hides" genotype info etc.), but let's try it
     fish_idx INT NOT NULL,                     -- 1st, 2nd, 3rd etc. expt with this fish?
     chamber_id VARCHAR(100) NOT NULL,          -- description / name-- links to "chambers" table
     hardware_test INT DEFAULT 0,
@@ -24,9 +24,9 @@ CREATE TABLE tracker.data (
 -- fill the table
 INSERT INTO tracker.data (experiment_class, experiment_rig, fish_id, fish_idx, chamber_id, data_path, imaging, date_added, last_mod, bad, addedby, comments)
 VALUES 
-    ("prolene", "RoLi-11", "expert-parakeet", 1, "my_first_chamber", "/path/to/the/data/", 0, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 0, "charlie", "extra notes go here"),
-    ("prolene_ctrl", "RoLi-11", "expert-parakeet", 2, "my_first_chamber", "/path/to/the/data2/", 0, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 0, "charlie", "e.g. I re-ran expert-parakeet bc he's a champ"),
-    ("prolene", "RoLi-10", "sad-panda", 1, "my_first_chamber", "/path/to/the/data3/", 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 0, "vikash", "vikash added new expt on new animal/rig. he did imaging")
+    ("proline", "RoLi-11", 1, 1, "my_first_chamber", "/path/to/the/data/", 0, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 0, "charlie", "extra notes go here"),
+    ("proline_ctrl", "RoLi-11", 1, 2, "my_first_chamber", "/path/to/the/data2/", 0, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 0, "charlie", "e.g. I re-ran expert-parakeet bc he's a champ"),
+    ("proline", "RoLi-10", 2, 1, "my_first_chamber", "/path/to/the/data3/", 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 0, "vikash", "vikash added new expt on new animal/rig. he did imaging")
 ;
 
 ---------------------------------------------------------------
@@ -48,16 +48,17 @@ VALUES
 ---------------------------------------------------------------
 -- "FISH" table 
 CREATE TABLE tracker.fish (
-    fish_id VARCHAR(100) NOT NULL,         -- gets auto-generated each time someone uses dasher to add a fish
+    fish_id INT NOT NULL AUTO_INCREMENT,   -- gets auto-generated each time someone uses dasher to add a fish
     dpf INT NOT NULL,                      -- should all this animal stuff get replaced by a fish_id
     genotype VARCHAR(100) NOT NULL,
-    addedby VARCHAR(100)                   -- user name pulled from os
+    addedby VARCHAR(100),                   -- user name pulled from os
+    PRIMARY KEY ( fish_id )
 );
 -- fill the table
 INSERT INTO tracker.fish (fish_id, dpf, genotype, addedby)
 VALUES
-    ("expert-parakeet", "8", "Tg(elavl3:H2B-GCaMP6s+/+)", "charlie"),
-    ("sad-panda", "5", "Tg(elavl3:H2B-GCaMP6s+/+)", "vikash")
+    (1, "8", "Tg(elavl3:H2B-GCaMP6s+/+)", "charlie"),
+    (2, "5", "Tg(elavl3:H2B-GCaMP6s+/+)", "vikash")
 ;
 
 ---------------------------------------------------------------
